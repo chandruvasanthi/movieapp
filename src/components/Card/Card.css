@@ -1,0 +1,107 @@
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+.card {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  background-color: rgba(30, 30, 30, 0.45);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 2px 2px 6px rgba(242, 201, 76, 0.4);
+}
+.cardlink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+}
+.movie-poster {
+  width: 100%;
+  height: 260px;
+  object-fit: fill;
+  border-radius: 6px;
+}
+.hover-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  position: relative;
+  width: 100%;
+}
+.text {
+  color: #cccccc;
+  width: 100%;
+}
+.movie-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0 2px 0;
+}
+.movie-year {
+  font-size: 14px;
+  margin: 0 0 5px 0;
+}
+.movie-rating {
+  color: gold;
+  font-size: 16px;
+  margin: 0;
+}
+.star {
+  margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+  .card-grid {
+    justify-content: center;
+    gap: 15px;
+  }
+  .card {
+    max-width: 200px;
+  }
+  .movie-poster {
+    height: 220px;
+  }
+  .movie-title {
+    font-size: 14px;
+  }
+  .movie-year,
+  .movie-rating {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    max-width: 100%;
+  }
+  .movie-poster {
+    height: 200px;
+  }
+}
