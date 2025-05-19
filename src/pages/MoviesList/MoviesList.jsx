@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import './MoviesList.css';
-import Card from '../../components/Card/Card';
+const Card = lazy(() => import('../../components/Card/Card'));
 import useFetch from '../../hooks/useFetch';
 import { Link, useLocation } from 'react-router-dom';
 import { IoHomeSharp } from "react-icons/io5";
-import CardShimmer from '../../components/CardShimmer/CardShimmer';
+const CardShimmer = lazy(() => import('../../components/CardShimmer/CardShimmer'));
 
 const MoviesList = ({ apiPath, title }) => {
 const [currentPage, setCurrentPage] = useState(1);
@@ -14,16 +14,18 @@ const { data: movies, totalPages, loading, error } = useFetch(apiPath, "", curre
     document.title = title;
   }, [title]);
 
-
 const handlePageChange = (page) => {
   if (page !== currentPage && page >= 1 && page <= totalPages) {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 };
-
 const location = useLocation();
 const showHomeBtn = location.pathname !== '/';
+const visiblePages = Array.from({ length: 5 }, (_, i) => currentPage - 2 + i).filter(
+    (page) => page >= 1 && page <= totalPages
+  );
+
 
   return (
     <div className='movie-list'>
@@ -57,28 +59,19 @@ const showHomeBtn = location.pathname !== '/';
                   </div>
              </div>
          </div>
-
     </div>  
-
     </div>
       <p className='watchlistp'>Your Watchlist Begins Here. . .</p>
       <div className='watchlistbr'></div>
       
       <div className='cards'>
-        {/* {loading && <p className="loading-text">Loading movies...</p>} */}
-        {loading && (
-          <>
-            {[...Array(8)].map((_, index) => (
-             <CardShimmer key={index} />
-            ))}
-         </>
-         )}
-
-
-        {error && <p className="error-text">Error: {error}</p>}
-        {!loading && !error && movies.map((movie) => (
-        <Card key={movie.id} movie={movie} />
-        ))}
+          <Suspense fallback={<div>Loading...</div>}>
+              {loading && [...Array(8)].map((_, index) => <CardShimmer key={index} />)}
+              {error && <p className="error-text">Error: {error}</p>}
+              {!loading && !error && movies.map((movie) => (
+              <Card key={movie.id} movie={movie} />
+           ))}
+         </Suspense>
      </div>
 
       <div className="container mt-4">
@@ -87,15 +80,11 @@ const showHomeBtn = location.pathname !== '/';
             <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
           </li>
 
-          {[...Array(5)].map((_, i) => {
-            const page = currentPage - 2 + i;
-            if (page < 1 || page > totalPages) return null;
-            return (
-              <li key={page} className={`page-item ${currentPage === page ? "active" : ""}`}>
-                <button className="page-link" onClick={() => handlePageChange(page)}>{page}</button>
-              </li>
-            );
-          })}
+           {visiblePages.map((page) => (
+            <li key={page} className={`page-item ${currentPage === page ? "active" : ""}`}>
+              <button className="page-link" onClick={() => handlePageChange(page)}>{page}</button>
+            </li>
+          ))}
           <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
             <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
           </li>

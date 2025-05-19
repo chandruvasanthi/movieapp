@@ -1,34 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const useFetch = (apiPath, queryTerm = "", currentPage = 1) => {
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);     
-  const [error, setError] = useState(null); 
-  const key = "c58c0cd7ccadd426a1bdcd63500303ad";
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const cache = useRef({});
+  const apiKey = "c58c0cd7ccadd426a1bdcd63500303ad";
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);     
+      setLoading(true);
       setError(null);
-      try {
-        const url = apiPath.startsWith('search/') && queryTerm
-            ? `https://api.themoviedb.org/3/${apiPath}?api_key=${key}&query=${queryTerm}&page=${currentPage}`
-            : `https://api.themoviedb.org/3/${apiPath}?api_key=${key}&page=${currentPage}`;
 
+      const url = apiPath.startsWith('search/') && queryTerm
+        ? `https://api.themoviedb.org/3/${apiPath}?api_key=${apiKey}&query=${queryTerm}&page=${currentPage}`
+        : `https://api.themoviedb.org/3/${apiPath}?api_key=${apiKey}&page=${currentPage}`;
+
+      const cacheKey = `${url}`;
+      if (cache.current[cacheKey]) {
+        const cached = cache.current[cacheKey];
+        setData(cached.results || []);
+        setTotalPages(cached.total_pages || 1);
+        setLoading(false);
+        return;
+      }try {
         const res = await fetch(url);
         const json = await res.json();
-
-        if (!json.results) return;
+        if (!json.results) {
+          setData([]);
+          setTotalPages(1);
+          return;
+        }
+        cache.current[cacheKey] = json;
         setData(json.results);
-        setTotalPages(json.total_pages);
+        setTotalPages(json.total_pages || 1);
       } catch (err) {
-        console.error("Failed to fetch:", err);
+        console.error("Fetch error:", err);
+        setError("Failed to fetch data.");
         setData([]);
         setTotalPages(1);
-
       } finally {
-        setLoading(false);  
+        setLoading(false);
       }
     };
 

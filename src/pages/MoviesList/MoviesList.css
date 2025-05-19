@@ -129,7 +129,29 @@
   cursor: not-allowed;
   opacity: 0.6;
 }
-
+.bthbtn {
+    position: fixed;
+    bottom: 72px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #161513;
+    color: #ffcc00;
+    border: 1px solid #ffcc00;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 1001;
+    animation: moveUpDown 2s ease-in-out infinite;
+}
+.bthbtn:hover{
+     color: #f99223;
+     background-color: #f1ecd0;
+     border: 1px solid #f99223;
+} 
 @media (max-width: 768px) {
    .movies-container{
       text-align: start;
