@@ -4,6 +4,7 @@ import Card from '../../components/Card/Card';
 import useFetch from '../../hooks/useFetch';
 import { Link, useLocation } from 'react-router-dom';
 import { IoHomeSharp } from "react-icons/io5";
+import CardShimmer from '../../components/CardShimmer/CardShimmer';
 
 const MoviesList = ({ apiPath, title }) => {
 const [currentPage, setCurrentPage] = useState(1);
@@ -64,7 +65,16 @@ const showHomeBtn = location.pathname !== '/';
       <div className='watchlistbr'></div>
       
       <div className='cards'>
-        {loading && <p className="loading-text">Loading movies...</p>}
+        {/* {loading && <p className="loading-text">Loading movies...</p>} */}
+        {loading && (
+          <>
+            {[...Array(8)].map((_, index) => (
+             <CardShimmer key={index} />
+            ))}
+         </>
+         )}
+
+
         {error && <p className="error-text">Error: {error}</p>}
         {!loading && !error && movies.map((movie) => (
         <Card key={movie.id} movie={movie} />
