@@ -1,9 +1,9 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import './MoviesList.css';
-const Card = lazy(() => import('../../components/Card/Card'));
 import useFetch from '../../hooks/useFetch';
 import { Link, useLocation } from 'react-router-dom';
 import { IoHomeSharp } from "react-icons/io5";
+const Card = lazy(() => import('../../components/Card/Card'));
 const CardShimmer = lazy(() => import('../../components/CardShimmer/CardShimmer'));
 
 const MoviesList = ({ apiPath, title }) => {
@@ -64,15 +64,23 @@ const visiblePages = Array.from({ length: 5 }, (_, i) => currentPage - 2 + i).fi
       <p className='watchlistp'>Your Watchlist Begins Here. . .</p>
       <div className='watchlistbr'></div>
       
-      <div className='cards'>
-          <Suspense fallback={<div>Loading...</div>}>
-              {loading && [...Array(8)].map((_, index) => <CardShimmer key={index} />)}
-              {error && <p className="error-text">Error: {error}</p>}
-              {!loading && !error && movies.map((movie) => (
+     <div className='cards'>
+        {loading ? (
+          <Suspense fallback={<div>Loading shimmer...</div>}>
+            {[...Array(8)].map((_, index) => (
+              <CardShimmer key={index} />
+            ))}
+          </Suspense>
+        ) : error ? (
+          <p className="error-text">Error: {error}</p>
+        ) : (
+          <Suspense fallback={<div>Loading cards...</div>}>
+            {movies.map((movie) => (
               <Card key={movie.id} movie={movie} />
-           ))}
-         </Suspense>
-     </div>
+            ))}
+          </Suspense>
+        )}
+      </div>
 
       <div className="container mt-4">
         <ul className="pagination justify-content-center">
