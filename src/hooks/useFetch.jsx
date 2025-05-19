@@ -8,9 +8,7 @@ const useFetch = (apiPath, queryTerm = "", currentPage = 1) => {
 
   const cache = useRef({});
   const apiKey = import.meta.env.VITE_TMDB_API_KEY;
-
-  // const apiKey = "c58c0cd7ccadd426a1bdcd63500303ad";
-
+  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

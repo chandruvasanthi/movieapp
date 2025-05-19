@@ -8,7 +8,8 @@ const CardShimmer = lazy(() => import('../../components/CardShimmer/CardShimmer'
 
 const MoviesList = ({ apiPath, title }) => {
 const [currentPage, setCurrentPage] = useState(1);
-const { data: movies, totalPages, loading, error } = useFetch(apiPath, "", currentPage);
+const [retryCount, setRetryCount] = useState(0);
+const { data: movies, totalPages, loading, error } = useFetch(apiPath, "", currentPage, retryCount);
 
  useEffect(() => {
     document.title = title;
@@ -25,6 +26,9 @@ const showHomeBtn = location.pathname !== '/';
 const visiblePages = Array.from({ length: 5 }, (_, i) => currentPage - 2 + i).filter(
     (page) => page >= 1 && page <= totalPages
   );
+const handleRetry = () => {
+  setRetryCount(prev => prev + 1);
+};
 
 
   return (
@@ -72,7 +76,10 @@ const visiblePages = Array.from({ length: 5 }, (_, i) => currentPage - 2 + i).fi
             ))}
           </Suspense>
         ) : error ? (
-          <p className="error-text">Error: {error}</p>
+          <div className="error-container">
+            <p className="error-text"> Oops! Couldn't load movies. Please check your internet or try again.</p>
+           <button className="retry-button" onClick={handleRetry}> Retry </button>
+         </div>
         ) : (
           <Suspense fallback={<div>Loading cards...</div>}>
             {movies.map((movie) => (
