@@ -12,7 +12,7 @@ const Card = ({movie}) => {
     <div className="card" >
       <Link to={`/movie/${id}`} className='cardlink'>
             <div className="card-container" title={title}>
-           <img className="movie-poster" src={image} alt={title} />
+           <img className="movie-poster" src={image} alt={title}   loading="lazy"/>
            <div className="hover-title">{title}</div>
 
             <div className="text">

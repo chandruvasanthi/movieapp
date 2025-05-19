@@ -7,17 +7,20 @@ import { IoHomeSharp } from "react-icons/io5";
 
 const MoviesList = ({ apiPath, title }) => {
 const [currentPage, setCurrentPage] = useState(1);
-const { data: movies, totalPages } = useFetch(apiPath, "", currentPage);
+const { data: movies, totalPages, loading, error } = useFetch(apiPath, "", currentPage);
+
  useEffect(() => {
     document.title = title;
   }, [title]);
 
+
 const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  if (page !== currentPage && page >= 1 && page <= totalPages) {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
+
 const location = useLocation();
 const showHomeBtn = location.pathname !== '/';
 
@@ -59,11 +62,15 @@ const showHomeBtn = location.pathname !== '/';
     </div>
       <p className='watchlistp'>Your Watchlist Begins Here. . .</p>
       <div className='watchlistbr'></div>
+      
       <div className='cards'>
-        {movies.map((movie) => (
-          <Card key={movie.id} movie={movie} />
+        {loading && <p className="loading-text">Loading movies...</p>}
+        {error && <p className="error-text">Error: {error}</p>}
+        {!loading && !error && movies.map((movie) => (
+        <Card key={movie.id} movie={movie} />
         ))}
-      </div>
+     </div>
+
       <div className="container mt-4">
         <ul className="pagination justify-content-center">
           <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
