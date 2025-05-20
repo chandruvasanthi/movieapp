@@ -85,7 +85,7 @@
 }
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-  background-color: rgba(0, 0, 0, 0.6);
+  /* background-color: rgba(0, 0, 0, 0.6); */
   border-radius: 50%;
 }
 .carousel-indicators button {

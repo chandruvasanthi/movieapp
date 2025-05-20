@@ -1,4 +1,4 @@
-import React, { useEffect, useState, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense, useRef } from 'react';
 import './MoviesList.css';
 import useFetch from '../../hooks/useFetch';
 import { Link, useLocation } from 'react-router-dom';
@@ -10,10 +10,21 @@ const MoviesList = ({ apiPath, title }) => {
 const [currentPage, setCurrentPage] = useState(1);
 const [retryCount, setRetryCount] = useState(0);
 const { data: movies, totalPages, loading, error } = useFetch(apiPath, "", currentPage, retryCount);
+const carouselRef = useRef(null);
 
  useEffect(() => {
     document.title = title;
   }, [title]);
+
+  useEffect(() => {
+    // Initialize Bootstrap carousel manually
+    if (window.bootstrap && carouselRef.current) {
+      new window.bootstrap.Carousel(carouselRef.current, {
+        interval: 3000,
+        ride: 'carousel'
+      });
+    }
+  }, []);
 
 const handlePageChange = (page) => {
   if (page !== currentPage && page >= 1 && page <= totalPages) {
@@ -34,7 +45,7 @@ const handleRetry = () => {
   return (
     <div className='movie-list'>
        <div className='maincarousel'>
-            <div id="demo" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div id="demo" className="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" ref={carouselRef}>
          <div className="carousel-indicators">
             <button type="button" data-bs-target="#demo" data-bs-slide-to="0" className="active"></button>
             <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
@@ -42,29 +53,36 @@ const handleRetry = () => {
          </div>
          <div className="carousel-inner">
             <div className="carousel-item active">
-           <img  src="https://i.ibb.co/VpxpH7mw/carouselimg3.jpg" className="d-block" />
+           <img  src="https://i.ibb.co/VpxpH7mw/carouselimg3.jpg" className="d-block" alt="slide1"/>
            <div className="carousel-caption">
              <h3>Your Ultimate Movie Destination</h3>
              <p>Discover the world of cinema like never before. </p>
            </div>
             </div>
             <div className="carousel-item">
-                <img  src="https://i.ibb.co/HLD0j9zK/lens-1418954.webp" className="d-block" />
+                <img  src="https://i.ibb.co/HLD0j9zK/lens-1418954.webp" className="d-block" alt="slide2" />
                 <div className="carousel-caption">
                     <h3>Dive into Cinematic Worlds</h3>
                     <p>Explore and enjoy handpicked favorite movies in one place.</p>
                   </div>
              </div>
              <div className="carousel-item">
-                <img  src="https://i.ibb.co/Gvt2CXGH/27cb79007c1c8742b34dde8e534a43eb.jpg" className="d-block" />
+                <img  src="https://i.ibb.co/Gvt2CXGH/27cb79007c1c8742b34dde8e534a43eb.jpg" className="d-block" alt="slide3"/>
                 <div className="carousel-caption">
                     <h3>Watch Anytime, Anywhere</h3>
                     <p>Your favorite new and old titles, anytime, anywhere.</p>
                   </div>
              </div>
-         </div>
+             <button type="button" className="carousel-control-prev" data-bs-target="#demo" data-bs-slide="prev">
+                  <span className="carousel-control-prev-icon"></span>
+             </button>
+             <button type="button" className="carousel-control-next" data-bs-target="#demo" data-bs-slide="next">
+                  <span className="carousel-control-next-icon"></span>
+             </button>
+        </div>
     </div>  
     </div>
+    
       <p className='watchlistp'>Your Watchlist Begins Here. . .</p>
       <div className='watchlistbr'></div>
       
