@@ -1,4 +1,3 @@
-// components/Card/CardShimmer.jsx
 import React from 'react';
 import './CardShimmer.css';
 

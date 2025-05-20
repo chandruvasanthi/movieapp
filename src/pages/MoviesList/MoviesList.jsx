@@ -17,7 +17,6 @@ const carouselRef = useRef(null);
   }, [title]);
 
   useEffect(() => {
-    // Initialize Bootstrap carousel manually
     if (window.bootstrap && carouselRef.current) {
       new window.bootstrap.Carousel(carouselRef.current, {
         interval: 3000,
