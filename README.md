@@ -12,6 +12,7 @@ Features:
 - Pagination for movie list pages.
   
 Live Demo url: https://movieapp-list.vercel.app/
+
 How to Run Locally :
 Clone the repo:
 git clone https://github.com/chandruvasanthi/movieapp.git
